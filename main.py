@@ -9,12 +9,11 @@ GEDI = 'C:/Users/herzu/Downloads/GEDI_clipped.gpkg'
 GEDI = gp.read_file(GEDI)
 
 
-
 variable_name = 'Canopy_cover'
 
 print(GEDI.describe)
 GEDI.describe(percentiles=[.1, .2, .3, .4, .5, .6, .7, .8, .9])
-GEDI_table = GEDI.describe(percentiles=[.1, 2, 3, 4, 5, 6, 7, 8, 9])
+GEDI_table = GEDI.describe(percentiles=[.1, .2, .3, .4, .5, .6, .7, .8, .9])
 GEDI_table.to_csv('C:/Users/herzu/Downloads/GEDI_Deskriptive_Statistik.csv', float_format='%.5f')
 
 
@@ -45,14 +44,10 @@ for i, variable_name in enumerate(variable_names):
 plt.show()
 
 
-import geopandas as gpd
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 # Load the geopackage and extract the columns
 variable_names = ['Canopy_cover', 'Height_98', 'Plant_area', 'Foliage_height']
-variable_labels = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index', 'Foliage Height Diversity Index']
+variable_labels = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
+                   'Foliage Height Diversity Index']
 
 # Create a DataFrame from the GeoDataFrame
 df = GEDI[variable_names].dropna()
@@ -78,14 +73,10 @@ ax.set_title("Correlation Matrix")
 # Show the plot
 plt.show()
 
-import geopandas as gpd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from scipy import stats
-
 # Laden der Geopackage-Datei und Extrahieren der Spalten
 variable_names = ['Canopy_cover', 'Height_98', 'Plant_area', 'Foliage_height']
-variable_labels = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index', 'Foliage Height Diversity Index']
+variable_labels = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
+                   'Foliage Height Diversity Index']
 
 # Erstellen des Raster-Korrelationsplots
 g = sns.pairplot(GEDI[variable_names].dropna(), kind='scatter', diag_kind='kde', plot_kws={'s': 5})
@@ -120,5 +111,4 @@ for i, label in enumerate(variable_labels):
 
 # Anzeigen des Diagramms
 plt.show()
-#g.savefig('GEDI_Parameter/Korrelation_v2.png')
-
+# g.savefig('GEDI_Parameter/Korrelation_v2.png')
