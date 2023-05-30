@@ -8,7 +8,7 @@ from scipy import stats
 GEDI = 'C:/Users/herzu/Downloads/GEDI_clipped.gpkg'
 GEDI = gp.read_file(GEDI)
 
-
+###
 variable_name = 'Canopy_cover'
 
 print(GEDI.describe)
