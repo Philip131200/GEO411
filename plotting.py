@@ -8,7 +8,7 @@ save_path = Path(r'{}'.format(save_path))
 gedi_path = Path(r'{}'.format(gedi_path))
 
 #create_boxplots(gedi_path, save_path)
-plot_correlation_matrix(gedi_path, save_path)
+#plot_correlation_matrix(gedi_path, save_path)
 #create_correlation_plots(gedi_path, save_path)
 
 
