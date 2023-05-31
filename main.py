@@ -24,18 +24,18 @@ def load_gedi_gpkg(path_l2a, path_l2b, time_range, save_path):
 
 
 def create_boxplots(gedi, save_filepath):
-    variable_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
-                      'Foliage Height Diversity Index']
-    gedi = gp.read_file(gedi)
+    parameter_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
+                       'Foliage Height Diversity Index']
+    gedi_data = gp.read_file(gedi)
 
     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
 
     # Schleife über die Variablennamen und Erstellen der Boxplots
-    for i, variable_name in enumerate(variable_names):
+    for i, variable_name in enumerate(parameter_names):
         row = i // 2
         col = i % 2
         ax = axs[row, col]
-        data = gedi[variable_name].dropna().values
+        data = gedi_data[variable_name].dropna().values
         ax.boxplot(data)
         # Manuelle Änderung der Überschrift
         if variable_name == 'Total Canopy Cover':
@@ -50,19 +50,17 @@ def create_boxplots(gedi, save_filepath):
     # Save the figure
     plt.savefig(save_filepath / 'boxplot.png')
     print('finished create_boxplots')
-
     # Show the plot
     plt.show()
 
 
 def plot_correlation_matrix(gedi, save_filepath):
-    variable_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
+    parameter_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
                        'Foliage Height Diversity Index']
-    variable_labels = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
-                       'Foliage Height Diversity Index']
-    gedi = gp.read_file(gedi)
+    gedi_data = gp.read_file(gedi)
     # Create a DataFrame from the GeoDataFrame
-    df = gedi[variable_names].dropna()
+    df = gedi_data[parameter_names].dropna()
+
     # Calculate the correlation matrix
     corr_matrix = df.corr()
     # Set up the figure and axes
@@ -70,42 +68,41 @@ def plot_correlation_matrix(gedi, save_filepath):
     # Plot the correlation matrix using seaborn
     sns.heatmap(corr_matrix, cmap='coolwarm', annot=True, fmt=".2f", cbar=True, square=True, ax=ax)
     # Set the x-axis tick labels
-    ax.set_xticklabels(variable_labels, rotation=45, ha='right')
+    ax.set_xticklabels(parameter_names, rotation=45, ha='right')
     # Set the y-axis tick labels
-    ax.set_yticklabels(variable_labels, rotation=0)
+    ax.set_yticklabels(parameter_names, rotation=0)
     # Set the title
     ax.set_title("Correlation Matrix")
+
     # Save the plot
     plt.tight_layout()
-    plt.savefig(save_filepath / 'correlationamtrix.png')
+    plt.savefig(save_filepath / 'correlationmatrix.png')
     print('finished plot_correlation_matrix')
     # Show the plot
     plt.show()
 
 
 def create_correlation_plots(gedi, save_filepath):
-    variable_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
-                       'Foliage Height Diversity Index']
-    variable_labels = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
-                       'Foliage Height Diversity Index']
+    parameter_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
+                      'Foliage Height Diversity Index']
     # Read the GEDI geopackage into a GeoDataFrame
-    gedi = gp.read_file(gedi)
+    gedi_data = gp.read_file(gedi)
 
     # Create PairGrid object
-    g = sns.PairGrid(gedi[variable_names], diag_sharey=False)
+    g = sns.PairGrid(gedi_data[parameter_names], diag_sharey=False)
     g.map_upper(plt.scatter, alpha=0.5, s=5)
     g.map_lower(sns.kdeplot, cmap='viridis', fill=True)
     g.map_diag(sns.histplot, kde=True)
 
     # Loop over variable names and add regression lines and R^2 texts
-    for i, var1 in enumerate(variable_names):
-        for j, var2 in enumerate(variable_names):
+    for i, var1 in enumerate(parameter_names):
+        for j, var2 in enumerate(parameter_names):
             if i != j:
-                x = gedi[var1]
-                y = gedi[var2]
+                x = gedi_data[var1]
+                y = gedi_data[var2]
                 ax = g.axes[j, i]
                 scatter = ax.scatter(x, y, c='#430154', alpha=0.9, s=5)
-                sns.kdeplot(data=gedi, x=var1, y=var2, cmap='viridis', fill=True, ax=ax)
+                sns.kdeplot(data=gedi_data, x=var1, y=var2, cmap='viridis', fill=True, ax=ax)
                 if var2 == 'Foliage_height':
                     ax.figure.colorbar(scatter, ax=ax)
                 slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
@@ -114,7 +111,7 @@ def create_correlation_plots(gedi, save_filepath):
                 ax.plot(x, slope*x + intercept, color='r', linewidth=0.5)
 
     # Adjust plot titles
-    for i, label in enumerate(variable_labels):
+    for i, label in enumerate(parameter_names):
         g.axes[i, 0].set_ylabel(label)
         g.axes[-1, i].set_xlabel(label)
 
