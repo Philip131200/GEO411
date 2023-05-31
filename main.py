@@ -15,10 +15,11 @@ def load_gedi_gpkg(path_l2a, path_l2b, time_range, save_path):
     gedi_data['time'] = pd.to_datetime(gedi_data['Acquisition Time'])
     gedi_data = gedi_data.set_index('time')
     if time_range is not None:
-        assert len(time_range) == 2, "time_range must be a list of two elements"
+        assert len(time_range) == 2, 'time_range must be a list of two elements'
         gedi_data = gedi_data.sort_index().loc[f'{time_range[0]}':f'{time_range[1]}']
 
-    gedi_data.to_file(save_path / 'GEDI_clipped.gpkg', driver="GPKG")
+    gedi_data.to_file(save_path / 'GEDI_clipped.gpkg', driver='GPKG')
+    print('finished load_gedi_gpkg')
     return gedi_data
 
 
@@ -48,6 +49,7 @@ def create_boxplots(gedi, save_filepath):
 
     # Save the figure
     plt.savefig(save_filepath / 'boxplot.png')
+    print('finished create_boxplots')
 
     # Show the plot
     plt.show()
@@ -76,6 +78,7 @@ def plot_correlation_matrix(gedi, save_filepath):
     # Save the plot
     plt.tight_layout()
     plt.savefig(save_filepath / 'correlationamtrix.png')
+    print('finished plot_correlation_matrix')
     # Show the plot
     plt.show()
 
@@ -117,4 +120,5 @@ def create_correlation_plots(gedi, save_filepath):
 
         plt.savefig(save_filepath / 'correlationplot.png')
     # Show the plot
+    print('finished create_correlation_plots')
     plt.show()
