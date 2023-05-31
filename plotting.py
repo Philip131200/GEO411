@@ -1,11 +1,13 @@
 from main import *
 from pathlib import Path
+import sys
 
-save_path = 'C:/Users/herzu/Downloads'
-gedi_path = 'C:/Users/herzu/Downloads/GEDI_clipped.gpkg'
+path = r'D:\Studium\GEO 411\Daten\geo411_gedi\Daten'
+gedi_data = Path(r'GEDI_clipped.gpkg')
 
-save_path = Path(r'{}'.format(save_path))
-gedi_path = Path(r'{}'.format(gedi_path))
+save_path = Path(r'{}'.format(path))
+#gedi_path = Path(r'{}\{}'.format(path, gedi_data))
+gedi_path = save_path / gedi_data
 
 create_boxplots(gedi_path, save_path)
 plot_correlation_matrix(gedi_path, save_path)

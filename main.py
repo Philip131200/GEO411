@@ -2,6 +2,7 @@ import geopandas as gp
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+from pathlib import Path
 
 
 def create_boxplots(gedi, save_filepath):
@@ -28,7 +29,7 @@ def create_boxplots(gedi, save_filepath):
             ax.set_title('Foliage Height Diversity Index')
 
     # Save the figure
-    plt.savefig(save_filepath + 'boxplot.png')
+    plt.savefig(save_filepath / r'boxplot.png')
 
     # Show the plot
     plt.show()
@@ -54,7 +55,8 @@ def plot_correlation_matrix(gedi, save_filepath):
     # Set the title
     ax.set_title("Correlation Matrix")
     # Save the plot
-    plt.savefig(save_filepath + 'correlationamtrix.png')
+    plt.tight_layout()
+    plt.savefig(save_filepath / r'correlationamtrix.png')
     # Show the plot
     plt.show()
 
@@ -93,6 +95,6 @@ def create_correlation_plots(gedi, save_filepath):
         g.axes[i, 0].set_ylabel(label)
         g.axes[-1, i].set_xlabel(label)
 
-        plt.savefig(save_filepath + 'correlationplot.png')
+        plt.savefig(save_filepath / r'correlationplot.png')
     # Show the plot
     plt.show()
