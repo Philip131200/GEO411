@@ -14,8 +14,9 @@ path_l2b = save_path / l2b_gpkg
 
 time_range = ['2019-04-28', '2022-04-29']
 
-#load_gedi_gpkg(path_l2a, path_l2b, time_range, save_path)
-#create_boxplots(gedi_path, save_path)
-#plot_correlation_matrix(gedi_path, save_path)
-#create_correlation_plots(gedi_path, save_path)
+load_gedi_gpkg(path_l2a, path_l2b, time_range, save_path)  # muss vor den anderen Funktionen ausgeführt werden
+
+create_boxplots(gedi_path, save_path)
+plot_correlation_matrix(gedi_path, save_path)
+create_correlation_plots(gedi_path, save_path)
 create_statistics(gedi_path, save_path)
