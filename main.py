@@ -84,7 +84,7 @@ def plot_correlation_matrix(gedi, save_filepath):
 
 def create_correlation_plots(gedi, save_filepath):
     parameter_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
-                      'Foliage Height Diversity Index']
+                       'Foliage Height Diversity Index']
     # Read the GEDI geopackage into a GeoDataFrame
     gedi_data = gp.read_file(gedi)
 
@@ -119,3 +119,12 @@ def create_correlation_plots(gedi, save_filepath):
     # Show the plot
     print('finished create_correlation_plots')
     plt.show()
+
+
+def create_statistics(gedi, save_filepath):
+    parameter_names = ['Total Canopy Cover', 'Relative Height bin98 (cm)', 'Total Plant Area Index',
+                       'Foliage Height Diversity Index']
+    gedi_data = gp.read_file(gedi)
+    gedi_table = gedi_data[parameter_names].describe(percentiles=[.02, .25, .5, .75, .98])
+    print('finished create_statistics')
+    gedi_table.to_csv(save_filepath / 'GEDI_Deskriptive_Statistik.csv', float_format='%.5f', sep=';', decimal=',')
