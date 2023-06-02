@@ -4,7 +4,7 @@ from pathlib import Path
 path = r'D:\Studium\GEO 411\Daten\geo411_gedi\Daten'
 save_path = Path(r'{}'.format(path))
 
-gedi_data = Path(r'GEDI_clipped.gpkg')
+gedi_data = Path(r'GEDI_clipped.gpkg')  # Datei wird aus load_gedi_gpkg() erstellt
 l2a_gpkg = Path(r'L2A.gpkg')
 l2b_gpkg = Path(r'L2B.gpkg')
 
