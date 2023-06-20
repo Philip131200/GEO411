@@ -135,25 +135,32 @@ def create_violinplot(gedi, save_filepath):
     height_ranges = [
         ('Shrub (< 250 cm)', [0, 250]),
         ('Brush (250 - 550 cm)', [250, 550]),
-        ('Tree (> 550 cm)', [550, float('inf')])
+        ('Tree (> 550 cm)', [550, 2100])
     ]
 
     fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(16, 6))
 
     for i, (title, height_range) in enumerate(height_ranges):
         filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] >= height_range[0]) &
-                                  (gedi_data['Relative Height bin98 (cm)'] < height_range[1])]
+                                  (gedi_data['Relative Height bin98 (cm)'] <= height_range[1])]
         ax = axes[i]
-        sns.violinplot(data=filtered_data, y='Relative Height bin98 (cm)', inner='quartile', ax=ax)
+        sns.violinplot(data=filtered_data, y='Relative Height bin98 (cm)', inner='quartile', ax=ax,
+                       cut=0, scale='width')
         ax.set_title(title)
-        ax.set_xlabel('Relative Height bin98 (cm)')
-        ax.set_ylabel('')
+        ax.set_ylabel('Relative Height bin98 (cm)', fontsize=10)
 
         data_percent = len(filtered_data) / len(gedi_data) * 100
-        ax.text(0.95, 0.95, f'Data Percentage: {data_percent:.2f}%', transform=ax.transAxes, ha='right', va='top',
-                fontsize=8, fontweight='bold')
 
-    fig.suptitle('Violinplots For Different Vegetation Classes')
+        # Data Percentage-Text in die X-Achse platzieren
+        ax.set_xlabel(f'Data Percentage: {data_percent:.2f}%', fontsize=10)
+
+        # Anpassung der y-Achsenbegrenzung
+        min_value = filtered_data['Relative Height bin98 (cm)'].min()
+        max_value = filtered_data['Relative Height bin98 (cm)'].max()
+        y_padding = 0.05 * (max_value - min_value)
+        ax.set_ylim(min_value - y_padding, max_value + y_padding)
+
+    fig.suptitle('Violinplots For Different Vegetation Classes', fontsize=16)
     plt.tight_layout(rect=[0, 0, 1, 0.95])
 
     plt.tight_layout()
