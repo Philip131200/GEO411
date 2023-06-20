@@ -166,3 +166,17 @@ def create_violinplot(gedi, save_filepath):
     plt.tight_layout()
     plt.savefig(save_filepath / 'violinplot.png')
     plt.show()
+
+
+def create_df_classes(gedi, save_filepath):
+    gedi_data = gp.read_file(gedi)
+    height_ranges = [
+        ('Shrub', [0, 250]),
+        ('Brush', [250, 550]),
+        ('Tree', [550, float('inf')])
+    ]
+    for i, (title, height_range) in enumerate(height_ranges):
+        filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] >= height_range[0]) &
+                                  (gedi_data['Relative Height bin98 (cm)'] < height_range[1])]
+        print('finished create tabels')
+        filtered_data.to_csv(save_filepath / '{}.csv'.format(title), float_format='%.5f', sep=';', decimal=',')
