@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+import numpy as np
 
 
 def load_gedi_gpkg(path_l2a, path_l2b, time_range, save_path):
@@ -176,7 +177,25 @@ def create_df_classes(gedi, save_filepath):
         ('Tree', [550, float('inf')])
     ]
     for i, (title, height_range) in enumerate(height_ranges):
-        filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] >= height_range[0]) &
-                                  (gedi_data['Relative Height bin98 (cm)'] < height_range[1])]
+        filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] > height_range[0]) &
+                                  (gedi_data['Relative Height bin98 (cm)'] <= height_range[1])]
         print('finished create tabels')
         filtered_data.to_csv(save_filepath / '{}.csv'.format(title), float_format='%.5f', sep=';', decimal=',')
+
+
+def create_violinplot_month(data, save_filepath):
+    vegetation_class = r'{}'.format(data).split('\\')[-1].split('.')[0]
+    class_data = pd.read_csv(data, sep=';', decimal=',')
+    class_data['time'] = pd.to_datetime(class_data['time'])
+    class_data['Month'] = class_data['time'].dt.month
+    # log_columns = ['Total Canopy Cover', 'Total Plant Area Index', 'Relative Height bin98 (cm)']
+    # for column in log_columns:
+    #     class_data[column] = np.log(class_data[column])
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    sns.violinplot(data=class_data, x='Month', y='Relative Height bin98 (cm)',
+                   inner='quartile', cut=0, scale='width', palette='hls')
+    ax.set_title('Monthly Violinplots For {}'.format(vegetation_class))
+    plt.tight_layout()
+    plt.savefig(save_filepath / 'violinplot_{}.png'.format(vegetation_class))
+    plt.show()
