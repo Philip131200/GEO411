@@ -128,3 +128,32 @@ def create_statistics(gedi, save_filepath):
     gedi_table = gedi_data[parameter_names].describe(percentiles=[.02, .25, .5, .75, .98])
     print('finished create_statistics')
     gedi_table.to_csv(save_filepath / 'GEDI_Deskriptive_Statistik.csv', float_format='%.5f', sep=';', decimal=',')
+
+
+def create_violinplot(gedi, save_filepath):
+    gedi_data = gp.read_file(gedi)
+    height_ranges = [
+        ('Shrub (< 250 cm)', [0, 250]),
+        ('Brush (250 - 550 cm)', [250, 550]),
+        ('Tree (> 550 cm)', [550, float('inf')])
+    ]
+
+    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(16, 6))
+
+    for i, (title, height_range) in enumerate(height_ranges):
+        filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] >= height_range[0]) & (gedi_data['Relative Height bin98 (cm)'] < height_range[1])]
+        ax = axes[i]
+        sns.violinplot(data=filtered_data, y='Relative Height bin98 (cm)', inner='quartile', ax=ax)
+        ax.set_title(title)
+        ax.set_xlabel('Relative Height bin98 (cm)')
+        ax.set_ylabel('')
+
+        data_percent = len(filtered_data) / len(gedi_data) * 100
+        ax.text(0.95, 0.95, f'Data Percentage: {data_percent:.2f}%', transform=ax.transAxes, ha='right', va='top', fontsize = 8, fontweight = 'bold')
+
+    fig.suptitle('Violinplots For Different Vegetation Classes')
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+    plt.tight_layout()
+    plt.savefig(save_filepath / 'violinplot.png')
+    plt.show()
