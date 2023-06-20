@@ -141,7 +141,8 @@ def create_violinplot(gedi, save_filepath):
     fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(16, 6))
 
     for i, (title, height_range) in enumerate(height_ranges):
-        filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] >= height_range[0]) & (gedi_data['Relative Height bin98 (cm)'] < height_range[1])]
+        filtered_data = gedi_data[(gedi_data['Relative Height bin98 (cm)'] >= height_range[0]) &
+                                  (gedi_data['Relative Height bin98 (cm)'] < height_range[1])]
         ax = axes[i]
         sns.violinplot(data=filtered_data, y='Relative Height bin98 (cm)', inner='quartile', ax=ax)
         ax.set_title(title)
@@ -149,7 +150,8 @@ def create_violinplot(gedi, save_filepath):
         ax.set_ylabel('')
 
         data_percent = len(filtered_data) / len(gedi_data) * 100
-        ax.text(0.95, 0.95, f'Data Percentage: {data_percent:.2f}%', transform=ax.transAxes, ha='right', va='top', fontsize = 8, fontweight = 'bold')
+        ax.text(0.95, 0.95, f'Data Percentage: {data_percent:.2f}%', transform=ax.transAxes, ha='right', va='top',
+                fontsize=8, fontweight='bold')
 
     fig.suptitle('Violinplots For Different Vegetation Classes')
     plt.tight_layout(rect=[0, 0, 1, 0.95])
