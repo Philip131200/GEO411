@@ -22,7 +22,7 @@ scatterplot = alt.Chart(data_pandas).mark_circle(size=60).encode(
     x=alt.X('time:T', timeUnit='yearmonthdate'),
     y='Relative Height bin98 (cm)',
     #color='Origin',
-    tooltip=['Relative Height bin98 (cm)'],
+    tooltip=['Relative Height bin98 (cm)', 'time:T'],
     opacity=alt.condition(brush, alt.value(0.6), alt.value(0.1))
 ).add_params(
     brush
@@ -54,4 +54,4 @@ hist = alt.Chart(data_pandas).mark_bar().encode(
 )
 
 st.write(scatterplot + line250 + line550 | hist)
-#st.write(scatterplot | hist)
+st.write('test')
