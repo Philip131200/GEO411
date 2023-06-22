@@ -11,7 +11,6 @@ path = r'C:\Users\herzu\Documents\GEO411'
 save_path = Path(r'{}'.format(path))
 
 gedi_data = save_path / Path(r'GEDI_clipped.gpkg')
-# read file as geopandas dataframe
 data = gpd.read_file(gedi_data)
 
 # Create a dictionary of parameter color maps
