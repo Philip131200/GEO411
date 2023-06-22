@@ -9,7 +9,7 @@ import sys
 
 st.set_page_config(layout="wide")
 
-path = r'D:\Studium\GEO 411\Daten\geo411_gedi\Daten'
+path = r'C:\Users\herzu\Documents\GEO411'
 save_path = Path(r'{}'.format(path))
 
 gedi_data = save_path / Path(r'GEDI_clipped.gpkg')
