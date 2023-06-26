@@ -211,7 +211,7 @@ def violin_seasons(gedi, save_filepath):
     gedi_data['Month'] = gedi_data['Acquisition Time'].dt.month
 
     # Define the rain season and dry season months
-    rain_season_months = [11, 12, 1, 2, 3, 4]  # November to April
+    rain_season_months = [1, 2, 3, 4,5, 6]
     dry_season_months = [month for month in range(1, 13) if month not in rain_season_months]
 
     # Filter data for rain season and dry season
