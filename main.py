@@ -199,3 +199,85 @@ def create_violinplot_month(data, save_filepath):
     plt.tight_layout()
     plt.savefig(save_filepath / 'violinplot_{}.png'.format(vegetation_class))
     plt.show()
+
+def violin_seasons(gedi, save_filepath):
+
+    gedi_data = gp.read_file(gedi)  # Replace gedi_data_path with the actual path to your data file
+
+    # Convert 'Acquisition Time' column to datetime format
+    gedi_data['Acquisition Time'] = pd.to_datetime(gedi_data['Acquisition Time'])
+
+    # Extract month from 'Acquisition Time' column
+    gedi_data['Month'] = gedi_data['Acquisition Time'].dt.month
+
+    # Define the rain season and dry season months
+    rain_season_months = [11, 12, 1, 2, 3, 4]  # November to April
+    dry_season_months = [month for month in range(1, 13) if month not in rain_season_months]
+
+    # Filter data for rain season and dry season
+    rain_season_data = gedi_data[gedi_data['Month'].isin(rain_season_months)]
+    dry_season_data = gedi_data[gedi_data['Month'].isin(dry_season_months)]
+
+    # Define height ranges and titles for the violinplots
+    height_ranges = [
+        ('Shrub (< 250 cm)', [0, 250]),
+        ('Brush (250 - 550 cm)', [250, 550]),
+        ('Tree (> 550 cm)', [550, 2100])
+    ]
+
+    # Create subplots for rain season and dry season
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(16, 12))
+    fig.suptitle('Violinplots for Different Vegetation Classes', fontsize=16)
+
+    # Plot violinplots for rain season
+    for i, (title, height_range) in enumerate(height_ranges):
+        filtered_data = rain_season_data[
+            (rain_season_data['Relative Height bin98 (cm)'] >= height_range[0]) &
+            (rain_season_data['Relative Height bin98 (cm)'] <= height_range[1])
+            ]
+        ax = axes[0, i]
+        sns.violinplot(data=filtered_data, y='Relative Height bin98 (cm)', inner='quartile', ax=ax,
+                       cut=0, scale='width', color='lightgreen', alpha=0.5)
+        ax.set_title(title)
+        ax.set_ylabel('Relative Height bin98 (cm)', fontsize=10)
+        data_percent = len(filtered_data) / len(rain_season_data) * 100
+        ax.set_xlabel(f'Data Percentage: {data_percent:.2f}%', fontsize=10)
+        min_value = filtered_data['Relative Height bin98 (cm)'].min()
+        max_value = filtered_data['Relative Height bin98 (cm)'].max()
+        y_padding = 0.05 * (max_value - min_value)
+        ax.set_ylim(min_value - y_padding, max_value + y_padding)
+
+    # Plot violinplots for dry season
+    for i, (title, height_range) in enumerate(height_ranges):
+        filtered_data = dry_season_data[
+            (dry_season_data['Relative Height bin98 (cm)'] >= height_range[0]) &
+            (dry_season_data['Relative Height bin98 (cm)'] <= height_range[1])
+            ]
+        ax = axes[1, i]
+        sns.violinplot(data=filtered_data, y='Relative Height bin98 (cm)', inner='quartile', ax=ax,
+                       cut=0, scale='width', color='indianred', alpha=0.5)
+        ax.set_title(title)
+        ax.set_ylabel('Relative Height bin98 (cm)', fontsize=10)
+        data_percent = len(filtered_data) / len(dry_season_data) * 100
+        ax.set_xlabel(f'Data Percentage: {data_percent:.2f}%', fontsize=10)
+        min_value = filtered_data['Relative Height bin98 (cm)'].min()
+        max_value = filtered_data['Relative Height bin98 (cm)'].max()
+        y_padding = 0.05 * (max_value - min_value)
+        ax.set_ylim(min_value - y_padding, max_value + y_padding)
+
+    # Remove the subplot titles for the dry season
+    for ax in axes[1]:
+        ax.set_title('')
+
+    # Add a legend
+    legend_labels = ['Rain Season', 'Dry Season']
+    legend_handles = [
+        plt.Rectangle((0, 0), 1, 1, fc='lightgreen', alpha=0.3),
+        plt.Rectangle((0, 0), 1, 1, fc='indianred', alpha=0.3)
+    ]
+    fig.legend(legend_handles, legend_labels, loc='upper right', bbox_to_anchor=(0.99, 0.89), fontsize='medium')
+
+    # Adjust layout and save the plot
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+    plt.savefig(save_filepath / 'violinplot_seasons.png')
+    plt.show()

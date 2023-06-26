@@ -22,9 +22,10 @@ time_range = ['2019-04-28', '2022-04-29']
 #create_correlation_plots(gedi_path, save_path)
 #create_statistics(gedi_path, save_path)
 #create_violinplot(gedi_path, save_path)
-create_df_classes(gedi_path, save_path)
-csv_names = ['Shrub.csv', 'Brush.csv', 'Tree.csv']
+#create_df_classes(gedi_path, save_path)
+#csv_names = ['Shrub.csv', 'Brush.csv', 'Tree.csv']
+violin_seasons(gedi_path, save_path)
 
-for vegetation_classes in csv_names:
-    data_shrub = save_path / vegetation_classes
-    create_violinplot_month(data_shrub, save_path)
+#for vegetation_classes in csv_names:
+    #data_shrub = save_path / vegetation_classes
+    #create_violinplot_month(data_shrub, save_path)
