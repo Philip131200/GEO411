@@ -81,8 +81,12 @@ for i, (title, height_range) in enumerate(height_ranges):
     ax_rain_season.set_ylabel(selected_parameter, fontsize=10)
     ax_rain_season.set_ylim(y_ranges[title.split()[0]])
 
-# Plot violinplots for dry season
-for i, (title, height_range) in enumerate(height_ranges):
+    # Calculate and display data percentage
+    data_percentage = len(filtered_rain_season_data) / len(gedi_data) * 100
+    ax_rain_season.text(0.5, -0.05, f"Data Percentage: {data_percentage:.2f}%", transform=ax_rain_season.transAxes,
+                        ha='center', fontweight='bold')
+
+    # Plot violinplots for dry season
     filtered_dry_season_data = dry_season_data[
         (dry_season_data['Relative Height bin98 (cm)'] >= height_range[0]) &
         (dry_season_data['Relative Height bin98 (cm)'] <= height_range[1])
@@ -90,13 +94,13 @@ for i, (title, height_range) in enumerate(height_ranges):
     ax_dry_season = axes[1, i]
     sns.violinplot(data=filtered_dry_season_data, y=selected_parameter, inner='quartile', ax=ax_dry_season,
                    cut=0, scale='width', color='indianred', alpha=0.5)
-    ax_dry_season.set_title(title)
     ax_dry_season.set_ylabel(selected_parameter, fontsize=10)
     ax_dry_season.set_ylim(y_ranges[title.split()[0]])
 
-# Remove the subplot titles for the dry season
-for ax in axes[1]:
-    ax.set_title('')
+    # Calculate and display data percentage
+    data_percentage = len(filtered_dry_season_data) / len(gedi_data) * 100
+    ax_dry_season.text(0.5, -0.05, f"Data Percentage: {data_percentage:.2f}%", transform=ax_dry_season.transAxes,
+                       ha='center', fontweight='bold')
 
 # Add a legend
 legend_labels = ['Rain Season', 'Dry Season']
@@ -105,6 +109,9 @@ legend_handles = [
     plt.Rectangle((0, 0), 1, 1, fc='indianred', alpha=0.3)
 ]
 fig.legend(legend_handles, legend_labels, loc='upper right', bbox_to_anchor=(0.99, 0.89), fontsize='medium')
+
+# Adjust spacing between subplots
+fig.tight_layout()
 
 # Show the plot using Streamlit
 st.pyplot(fig)
