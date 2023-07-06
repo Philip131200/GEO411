@@ -3,6 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+import xarray as xr
+import rioxarray
+from xarray.core import utils
+from geocube.api.core import make_geocube
 import numpy as np
 
 
@@ -281,3 +285,40 @@ def violin_seasons(gedi, save_filepath):
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.savefig(save_filepath / 'violinplot_seasons.png')
     plt.show()
+
+
+def add_gedi_to_xr(xr_obj, gedi_data, gedi_vars, resolution):
+    """
+    Rasterizes GEDI vector data and adds it to a given xarray Dataset as new data variables.
+
+    Parameters
+    ----------
+    xr_obj: xarray.Dataset
+        An xarray Dataset.
+    gedi_data: geopandas.GeoDataFrame
+        GeoDataFrame containing GEDI data.
+    gedi_vars: list(str)
+        List of attribute names (i.e. GEDI variables) to be included.
+    resolution:
+        A tuple of the spatial resolution of the returned data (Y, X), which should match the resolution of the input
+        `xr_obj` This includes the direction (as indicated by a positive or negative number). Typically, when using
+        most CRSs, the first number would be negative. E.g., `(-20, 20)` if the `xr_obj` is loaded with an UTM-based CRS
+        and 20 m resolution.
+
+    Returns
+    -------
+    xr_obj: xarray.Dataset
+        Same as input but with additional data variables containing the rasterized GEDI data.
+    """
+    if not gedi_data.crs.to_epsg() == xr_obj.rio.crs.to_epsg():
+        raise RuntimeError('CRS of input data are not matching!')
+
+    xr_obj_copy = xr_obj.copy(deep=True)
+    cube = make_geocube(gedi_data,
+                        measurements=gedi_vars,
+                        output_crs=f'epsg:{gedi_data.crs.to_epsg()}',
+                        resolution=resolution)
+    for v in gedi_vars:
+        xr_obj_copy[v] = cube[v]
+
+    return xr_obj_copy
