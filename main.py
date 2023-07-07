@@ -286,7 +286,7 @@ def violin_seasons(gedi, save_filepath):
     plt.savefig(save_filepath / 'violinplot_seasons.png')
     plt.show()
 
-
+# add gedi to xr from: https://gist.github.com/maawoo/39295c1c243d54a81256a12712c16619
 def add_gedi_to_xr(xr_obj, gedi_data, gedi_vars, resolution):
     """
     Rasterizes GEDI vector data and adds it to a given xarray Dataset as new data variables.
