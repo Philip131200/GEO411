@@ -204,6 +204,7 @@ def create_violinplot_month(data, save_filepath):
     plt.savefig(save_filepath / 'violinplot_{}.png'.format(vegetation_class))
     plt.show()
 
+
 def violin_seasons(gedi, save_filepath):
 
     gedi_data = gp.read_file(gedi)  # Replace gedi_data_path with the actual path to your data file
@@ -215,7 +216,7 @@ def violin_seasons(gedi, save_filepath):
     gedi_data['Month'] = gedi_data['Acquisition Time'].dt.month
 
     # Define the rain season and dry season months
-    rain_season_months = [1, 2, 3, 4,5, 6]
+    rain_season_months = [1, 2, 3, 4, 5, 6]
     dry_season_months = [month for month in range(1, 13) if month not in rain_season_months]
 
     # Filter data for rain season and dry season
@@ -285,6 +286,7 @@ def violin_seasons(gedi, save_filepath):
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.savefig(save_filepath / 'violinplot_seasons.png')
     plt.show()
+
 
 # add gedi to xr from: https://gist.github.com/maawoo/39295c1c243d54a81256a12712c16619
 def add_gedi_to_xr(xr_obj, gedi_data, gedi_vars, resolution):
