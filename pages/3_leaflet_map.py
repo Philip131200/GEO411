@@ -22,7 +22,8 @@ parameter_color_maps = {
 }
 
 # Create a Folium map centered around the data points
-map = folium.Map(location=[data['geometry'].centroid.y.mean(), data['geometry'].centroid.x.mean()], zoom_start=10)
+map_folium = folium.Map(location=[data['geometry'].centroid.y.mean(),
+                                  data['geometry'].centroid.x.mean()], zoom_start=10)
 
 # Add the Google satellite imagery tile layer
 googleSat = folium.TileLayer(
@@ -31,7 +32,7 @@ googleSat = folium.TileLayer(
     name='Satellite Image',
     max_zoom=20,
     subdomains=['mt0', 'mt1', 'mt2', 'mt3']
-).add_to(map)
+).add_to(map_folium)
 
 # Streamlit App
 st.title('Map Visualization')
@@ -78,7 +79,7 @@ if selected_parameter:
             color=color,
             fill_color=color,
             tooltip=tooltip
-        ).add_to(map)
+        ).add_to(map_folium)
 
     # Plot histogram
     st.subheader('Histogram')
@@ -89,4 +90,4 @@ if selected_parameter:
 
 # Display the Folium map
 st.subheader('Map')
-folium_static(map)
+folium_static(map_folium)
